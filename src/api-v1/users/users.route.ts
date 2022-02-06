@@ -11,12 +11,17 @@ const ranksController = new RanksController();
 const attendanceController = new AttendanceController();
 const completeProfileController = new CompleteProfileController();
 
-
-users.use(fileUpload())
+users.use(fileUpload());
 // Retrieve all Users
 users.get("/commonView", commonViewController.getUsers);
-users.route("/ranks").get(ranksController.getAllRanks).post(ranksController.getRankDetails);
+users
+  .route("/ranks")
+  .get(ranksController.getAllRanks)
+  .post(ranksController.getUserRanks);
 users.get("/attendance", attendanceController.getAttendance);
-users.route("/completeProfile").get(completeProfileController.completeProfileGet).patch(completeProfileController.completeProfilePatch);
+users
+  .route("/completeProfile")
+  .get(completeProfileController.completeProfileGet)
+  .patch(completeProfileController.completeProfilePatch);
 
 export default users;
