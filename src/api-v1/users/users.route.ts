@@ -1,10 +1,15 @@
 import { Router } from "express";
-import Controller from "./users.controller";
+import CompleteProfileController from "./completeProfile.controller";
+import * as fileUpload from "express-fileupload";
+
 
 const users: Router = Router();
-const controller = new Controller();
+const completeProfileController = new CompleteProfileController();
 
-// Retrieve all Users
-users.get("/", controller.getAllUsers);
+users.use(fileUpload())
+
+users.route("/complete-profile")
+    .get(completeProfileController.completeProfileGet)
+    .patch(completeProfileController.completeProfilePatch);
 
 export default users;
