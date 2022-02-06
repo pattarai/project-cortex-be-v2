@@ -53,11 +53,13 @@ export default class CompleteProfile {
             let profilePicFile = req.files.profilePic as UploadedFile;
             let bitmojiFile = req.files.bitmojiPic as UploadedFile;
 
-            let profilePath = path.join("public", "profile", `${userId}.jpg`);
-            let bitmojiPath = path.join("public", "bitmoji", `${userId}.jpg`);
+            if (profilePicFile && bitmojiFile) {
+                let profilePath = path.join("public", "profile", `${userId}.jpg`);
+                let bitmojiPath = path.join("public", "bitmoji", `${userId}.jpg`);
 
-            profilePicFile.mv(profilePath);
-            bitmojiFile.mv(bitmojiPath);
+                profilePicFile.mv(profilePath);
+                bitmojiFile.mv(bitmojiPath);
+            }
 
             const _user = await prisma.users.update({
                 where: {
@@ -81,8 +83,6 @@ export default class CompleteProfile {
             return res.json({
                 success: true,
                 data: _user,
-                profilePic: profilePath,
-                bitmojiPic: bitmojiPath,
             });
         } catch (err) {
             return res.status(500).json({
