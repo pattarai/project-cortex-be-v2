@@ -13,6 +13,14 @@ export default class AttendanceController {
           eventId: true,
           eventName: true,
           phase: true,
+          attendance: {
+            where:{
+              userId
+            },
+            select: {
+              status: true,
+            }
+          },
         },
       });
       return res.status(200).json({
