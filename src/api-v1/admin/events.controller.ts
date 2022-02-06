@@ -9,7 +9,7 @@ export default class EventsController {
     try {
       const { phase } = req.body;
       const eventId = await prisma.events.findMany({
-        where: { phase },
+        where: { phase: Number(phase) },
         select: {
           eventName: true,
           eventType: true,
