@@ -4,23 +4,25 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default class CommonViewController {
-  public getUsers = async (req: Request, res: Response): Promise<any> => {
+export default class RanksController {
+  public getRanks = async (req: Request, res: Response): Promise<any> => {
     try {
-      const users = await prisma.users.findMany({
+      const ranks = await prisma.ranking.findMany({
         select: {
+          factors: true,
           userId: true,
-          firstName: true,
-          lastName: true,
-          description: true,
-          project: true,
-          committee: true,
-          bitmojiUrl: true,
+          score: true,
+          users: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
         },
       });
       return res.status(200).json({
         message: "Success",
-        users,
+        ranks,
       });
     } catch (e) {
       console.error(e);

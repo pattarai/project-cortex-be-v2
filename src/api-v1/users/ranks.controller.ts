@@ -1,6 +1,6 @@
 //import * as bcrypt from 'bcrypt';
 import { Request, Response } from "express";
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -27,7 +27,7 @@ export default class RanksController {
       });
     }
   };
-  
+
   public getUserRanks = async (req: Request, res: Response): Promise<any> => {
     try {
       const { userId, phase } = req.body;
@@ -36,7 +36,7 @@ export default class RanksController {
           userId,
         },
         select: {
-        score: true,
+          score: true,
         },
       });
       return res.status(200).json({
