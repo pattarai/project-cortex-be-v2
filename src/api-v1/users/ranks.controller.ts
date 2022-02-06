@@ -7,17 +7,20 @@ const prisma = new PrismaClient();
 export default class RanksController {
   public getAllRanks = async (req: Request, res: Response): Promise<any> => {
     try {
-      const users = await prisma.users.findMany({
-        select: {
-          userId: true,
-          firstName: true,
-          lastName: true,
-          bitmojiUrl: true,
-        },
+      const ranks = await prisma.ranking.findMany({
+        select:{
+          score: true,
+          users: { select: {
+            userId: true,
+            firstName: true,
+            lastName: true,
+            bitmojiUrl: true,
+          },}
+        }, 
       });
       return res.status(200).json({
         message: "Success",
-        users,
+        ranks,
       });
     } catch (e) {
       console.error(e);
@@ -28,17 +31,22 @@ export default class RanksController {
     }
   };
   
-  public getUserRanks = async (req: Request, res: Response): Promise<any> => {
+  public getRankDetails = async (req: Request, res: Response): Promise<any> => {
     try {
       const { userId, phase } = req.body;
       const ranks = await prisma.ranking.findMany({
         where: {
           userId,
+          factors:{phase}
         },
         select: {
         score: true,
-        },
-      });
+        factors: {
+          select: {
+            factorId: true,
+            factorName: true,
+        },},
+      }});
       return res.status(200).json({
         message: "Success",
         ranks,
