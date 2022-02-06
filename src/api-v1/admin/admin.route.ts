@@ -1,17 +1,15 @@
 import { Router } from "express";
-import AttendanceController from "./attendance.controller";
-import EventsController from "./events.controller";
-import RanksController from "./ranks.controller";
+
+import attendance from "./attendance/attendance.route";
+import events from "./events/events.route";
+import ranks from "./ranks/ranks.route";
 
 const admin: Router = Router();
-const attendanceController = new AttendanceController();
-const eventsController = new EventsController();
-const ranksController = new RanksController();
 
 // Retrieve all Users
-admin.route("/attendance").get(attendanceController.getAttendance);
-admin.route("/events").get(eventsController.getEvents);
-admin.route("/ranks").get(ranksController.getRanks);
+admin.use("/attendance", attendance);
+admin.use("/events", events);
+admin.use("/ranks", ranks);
 
 
 export default admin;
