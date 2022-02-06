@@ -12,13 +12,10 @@ model users {
   email                String           @db.VarChar(100)
   password             String           @db.VarChar(50)
   verifyEmail          String?          @db.VarChar(100)
-  expiryDateVerify     DateTime?        @db.Timestamptz(6)
   phone                String?          @db.VarChar(15)
   forgotPasswordKey    String?          @db.VarChar(100)
-  forgotPasswordExpiry DateTime?        @db.Timestamptz(6)
   firstName            String           @db.VarChar(15)
   lastName             String           @db.VarChar(15)
-  dateOfBirth          DateTime?        @db.Timestamptz(6)
   collegeName          String?          @db.VarChar(50)
   department           String?          @db.VarChar(50)
   year                 Int?
@@ -37,6 +34,9 @@ model users {
   isActive             Boolean          @default(true)
   phase                Int?
   isCompleted          Boolean?         @default(false)
+  expiryDateVerify     String?          @db.VarChar(25)
+  forgotPasswordExpiry String?          @db.VarChar(25)
+  dateOfBirth          String?          @db.VarChar(25)
   attendance           attendance[]
   office_bearers       office_bearers[]
   ranking              ranking[]
