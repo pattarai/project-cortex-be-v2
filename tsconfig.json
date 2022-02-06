@@ -5,6 +5,6 @@
     "outDir": "dist",
     "sourceMap": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/api-v1/users/commonView"],
   "exclude": ["node_modules"]
 }
