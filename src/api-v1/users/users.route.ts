@@ -15,7 +15,7 @@ const completeProfileController = new CompleteProfileController();
 users.use(fileUpload())
 // Retrieve all Users
 users.get("/commonView", commonViewController.getUsers);
-users.route("/ranks").get(ranksController.getAllRanks).post(ranksController.getUserRanks);
+users.route("/ranks").get(ranksController.getAllRanks).post(ranksController.getRankDetails);
 users.get("/attendance", attendanceController.getAttendance);
 users.route("/completeProfile").get(completeProfileController.completeProfileGet).patch(completeProfileController.completeProfilePatch);
 
