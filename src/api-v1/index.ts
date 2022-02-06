@@ -6,6 +6,6 @@ import admin from "./admin/admin.route";
 const router: Router = Router();
 
 router.use("/users", users);
-// router.use("/admin", admin);
+router.use("/admin", admin);
 
 export default router;
