@@ -63,9 +63,7 @@ export default class CompleteProfile {
 
             return res.json({
                 success: true,
-                data: _user,
-                profilePic: profilePath,
-                bitmojiPic: bitmojiPath
+                data: _user
             })
         } catch (err) {
             return res.status(500).json({
