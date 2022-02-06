@@ -33,16 +33,20 @@ export default class RanksController {
   
   public getRankDetails = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { userId, phase } = req.body.users;
+      const { userId, phase } = req.body;
       const ranks = await prisma.ranking.findMany({
         where: {
           userId,
-          
+          factors:{phase}
         },
         select: {
         score: true,
-        },
-      });
+        factors: {
+          select: {
+            factorId: true,
+            factorName: true,
+        },},
+      }});
       return res.status(200).json({
         message: "Success",
         ranks,
