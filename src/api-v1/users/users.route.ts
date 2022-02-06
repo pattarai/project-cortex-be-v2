@@ -1,6 +1,7 @@
 import { Router } from "express";
 import CommonViewController from "./commonView.controller";
 import RanksController from "./ranks.controller";
+import AttendanceController from "./attendance.controller";
 
 const users: Router = Router();
 const commonViewController = new CommonViewController();
