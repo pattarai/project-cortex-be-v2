@@ -1,10 +1,10 @@
-//import * as bcrypt from 'bcrypt';
 import { Request, Response } from "express";
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export default class AttendanceController {
+  // Get all Attendance
   public getAttendance = async (req: Request, res: Response): Promise<any> => {
     try {
       const { eventName, eventType, eventDate } = req.body;
@@ -19,6 +19,7 @@ export default class AttendanceController {
         },
       });
 
+      //Check if attendance exists
       const attendance = await prisma.events.findMany({
         where: { eventId: Number(eventId.eventId) },
         select: {
@@ -77,6 +78,7 @@ export default class AttendanceController {
     }
   };
 
+  // Insert or Update Attendance
   public addAttendance = async (req: Request, res: Response): Promise<any> => {
     try {
       const { attendanceId, eventId, userId, status, externalId, name } =
@@ -103,6 +105,7 @@ export default class AttendanceController {
     }
   };
 
+  // Delete Attendance
   public deleteAttendance = async (req: Request, res: Response) => {
     try {
       const { externalId } = req.body;
