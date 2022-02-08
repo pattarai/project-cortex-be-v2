@@ -24,8 +24,8 @@ export default class AttendanceController {
         select: {
           attendance: {
             select: {
-              attendanceId: true,
               userId: true,
+              eventId: true,
               status: true,
               users: {
                 select: {
@@ -37,7 +37,6 @@ export default class AttendanceController {
           },
           external_attendance: {
             select: {
-              externalId: true,
               name: true,
             },
           },
@@ -48,7 +47,9 @@ export default class AttendanceController {
       if (attendance.attendance.length > 0) {
         return res.status(200).json({
           message: "Success",
-          attendance,
+          crewAttendance: attendance.attendance,
+          externalAttendance: attendance.external_attendance,
+          eventId: Number(eventId.eventId),
           isExist: true,
         });
       } else {
@@ -60,19 +61,19 @@ export default class AttendanceController {
           },
         });
 
-        userList = userList.map((user) => {
+        const crewAttendance = userList.map((user) => {
+          const users = { firstName: user.firstName, lastName: user.lastName };
           return {
             userId: user.userId,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            status: 1,
             eventId: Number(eventId.eventId),
+            status: 1,
+            users,
           };
         });
 
         return res.status(200).json({
           message: "Success",
-          userList,
+          crewAttendance,
           isExist: false,
           eventId: Number(eventId.eventId),
         });
@@ -105,6 +106,41 @@ export default class AttendanceController {
         message: "Success",
         crewattendance,
         externalAttendanceList,
+      });
+    } catch (e) {
+      console.error(e);
+      res.status(500).send({
+        success: false,
+        message: e.toString(),
+      });
+    }
+  };
+
+  //Update Attendance
+  public updateAttendance = async (req: Request, res: Response) => {
+    try {
+      const { crewAttendance } = req.body;
+
+      let crewAttendanceList: any = [];
+
+      type User = {
+        userId: number;
+        eventId: number;
+        status: number;
+      };
+
+      await prisma.$transaction(
+        (crewAttendanceList = crewAttendance.map((user: User) =>
+          prisma.attendance.updateMany({
+            where: { eventId: user.eventId, userId: user.userId },
+            data: { status: user.status },
+          })
+        ))
+      );
+
+      res.status(200).send({
+        message: "success",
+        crewAttendanceList,
       });
     } catch (e) {
       console.error(e);

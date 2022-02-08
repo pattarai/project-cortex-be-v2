@@ -8,6 +8,7 @@ attendance
   .route("/")
   .get(attendanceController.getAttendance)
   .post(attendanceController.addAttendance)
+  .patch(attendanceController.updateAttendance)
   .delete(attendanceController.deleteAttendance);
 
 export default attendance;
