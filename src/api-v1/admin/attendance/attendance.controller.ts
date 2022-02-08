@@ -19,8 +19,7 @@ export default class AttendanceController {
         },
       });
 
-      //Check if attendance exists
-      const attendance = await prisma.events.findMany({
+      const attendance = await prisma.events.findFirst({
         where: { eventId: Number(eventId.eventId) },
         select: {
           attendance: {
@@ -45,28 +44,37 @@ export default class AttendanceController {
         },
       });
 
-      const attendLength = attendance[0].attendance.length;
-
-      if (attendLength > 0) {
+      //Check if attendance exists
+      if (attendance.attendance.length > 0) {
         return res.status(200).json({
           message: "Success",
           attendance,
+          isExist: true,
         });
-      } else if (attendLength === 0) {
-        const userList = await prisma.users.findMany({
+      } else {
+        let userList = await prisma.users.findMany({
           select: {
             userId: true,
             firstName: true,
             lastName: true,
           },
         });
+
+        userList = userList.map((user) => {
+          return {
+            userId: user.userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            status: 1,
+            eventId: Number(eventId.eventId),
+          };
+        });
+
         return res.status(200).json({
           message: "Success",
           userList,
-        });
-      } else {
-        return res.status(200).json({
-          message: "Failure",
+          isExist: false,
+          eventId: Number(eventId.eventId),
         });
       }
     } catch (e) {
@@ -78,40 +86,25 @@ export default class AttendanceController {
     }
   };
 
-  // Insert or Update Attendance
+  // Insert Attendance
   public addAttendance = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { eventId, attendanceId, userId, status, externalId, name } =
-        req.body;
-      const attendance = await prisma.attendance.upsert({
-        where: {
-          attendanceId: Number(attendanceId),
-        },
-        update: {
-          status: status,
-        },
-        create: {
-          userId: Number(userId),
-          eventId: Number(eventId),
-          status: status,
-        },
+      const { crewAttendance, externalAttendance } = req.body;
+
+      const crewattendance = await prisma.attendance.createMany({
+        data: [...crewAttendance],
       });
-      const externalAttendance = await prisma.external_attendance.upsert({
-        where: {
-          externalId: Number(externalId),
-        },
-        update: {
-          name: name,
-        },
-        create: {
-          name: name,
-          eventId: Number(eventId),
-        },
-      });
+
+      let externalAttendanceList: any = [];
+      if (externalAttendance.length > 0) {
+        externalAttendanceList = await prisma.external_attendance.createMany({
+          data: [...externalAttendance],
+        });
+      }
       return res.status(200).json({
         message: "Success",
-        attendance,
-        externalAttendance,
+        crewattendance,
+        externalAttendanceList,
       });
     } catch (e) {
       console.error(e);
