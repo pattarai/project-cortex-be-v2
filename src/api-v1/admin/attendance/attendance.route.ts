@@ -7,6 +7,7 @@ const attendanceController = new AttendanceController();
 attendance
   .route("/")
   .get(attendanceController.getAttendance)
+  .post(attendanceController.addAttendance)
   .delete(attendanceController.deleteAttendance);
 
 export default attendance;

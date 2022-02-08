@@ -81,20 +81,37 @@ export default class AttendanceController {
   // Insert or Update Attendance
   public addAttendance = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { attendanceId, eventId, userId, status, externalId, name } =
+      const { eventId, attendanceId, userId, status, externalId, name } =
         req.body;
       const attendance = await prisma.attendance.upsert({
-        where: { attendanceId },
-        update: { userId, eventId, status },
+        where: {
+          attendanceId: Number(attendanceId),
+        },
+        update: {
+          status: status,
+        },
         create: {
-          userId,
-          eventId,
-          status,
+          userId: Number(userId),
+          eventId: Number(eventId),
+          status: status,
+        },
+      });
+      const externalAttendance = await prisma.external_attendance.upsert({
+        where: {
+          externalId: Number(externalId),
+        },
+        update: {
+          name: name,
+        },
+        create: {
+          name: name,
+          eventId: Number(eventId),
         },
       });
       return res.status(200).json({
         message: "Success",
         attendance,
+        externalAttendance,
       });
     } catch (e) {
       console.error(e);
