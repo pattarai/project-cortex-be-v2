@@ -140,7 +140,6 @@ export default class AttendanceController {
 
       res.status(200).send({
         message: "success",
-        crewAttendanceList,
       });
     } catch (e) {
       console.error(e);
