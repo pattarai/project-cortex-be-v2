@@ -2,15 +2,17 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-export default class RanksController {
+export default class RankController {
   public getAllRanks = async (req: Request, res: Response): Promise<any> => {
     try {
+      // get current phase
       const currentPhase = await prisma.factors.aggregate({
         _max: {
           phase: true,
         },
       });
 
+      // total score calculation for each user
       const sum = await prisma.ranking.groupBy({
         by: ["userId"],
         where: {
@@ -23,6 +25,7 @@ export default class RanksController {
         },
       });
 
+      // current phase total max score calculation
       const totalMaxscore = await prisma.factors.groupBy({
         by: ["phase"],
         where: {
@@ -33,7 +36,8 @@ export default class RanksController {
         },
       });
 
-      const ranks = await prisma.ranking.findMany({
+      // get user details
+      const userDetails = await prisma.ranking.findMany({
         select: {
           userId: true,
           users: {
@@ -45,7 +49,7 @@ export default class RanksController {
         },
       });
 
-      //FORMULA : (sum(score) / sum(maxScore)) * 10
+      // FORMULA : (sum(score) / sum(maxScore)) * 10
       const totalScore = sum.map((item) => {
         const total = parseFloat(
           Math.abs(
@@ -63,31 +67,31 @@ export default class RanksController {
         if (item.total >= 7.5) {
           return {
             ...item,
-            ...ranks.find((user) => user.userId === item.userId),
+            ...userDetails.find((user) => user.userId === item.userId),
             league: "DIAMOND",
           };
         } else if (item.total >= 6.5) {
           return {
             ...item,
-            ...ranks.find((user) => user.userId === item.userId),
+            ...userDetails.find((user) => user.userId === item.userId),
             league: "GOLD",
           };
         } else if (item.total >= 5.5) {
           return {
             ...item,
-            ...ranks.find((user) => user.userId === item.userId),
+            ...userDetails.find((user) => user.userId === item.userId),
             league: "SILVER",
           };
         } else if (item.total >= 4.5) {
           return {
             ...item,
-            ...ranks.find((user) => user.userId === item.userId),
+            ...userDetails.find((user) => user.userId === item.userId),
             league: "BRONZE",
           };
         } else {
           return {
             ...item,
-            ...ranks.find((user) => user.userId === item.userId),
+            ...userDetails.find((user) => user.userId === item.userId),
             league: "COPPER",
           };
         }
@@ -109,7 +113,7 @@ export default class RanksController {
   public getUserRanks = async (req: Request, res: Response): Promise<any> => {
     try {
       const { userId, phase } = req.body;
-      const ranks = await prisma.ranking.findMany({
+      const userDetails = await prisma.ranking.findMany({
         where: {
           userId,
           factors: { phase },
@@ -120,7 +124,7 @@ export default class RanksController {
       });
       return res.status(200).json({
         message: "Success",
-        ranks,
+        userDetails,
       });
     } catch (e) {
       console.error(e);
