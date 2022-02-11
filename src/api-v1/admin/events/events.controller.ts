@@ -18,6 +18,9 @@ export default class EventsController {
           eventId: true,
           eventName: true,
           eventDate: true,
+          eventType: true,
+          conductedBy: true,
+          name: true,
           phase: true,
         },
       });
@@ -41,6 +44,9 @@ export default class EventsController {
           eventId: event.eventId,
           eventName: event.eventName,
           eventDate: eventDate,
+          eventType: event.eventType,
+          conductedBy: event.conductedBy,
+          speaker: event.name,
           phase: phase,
         };
       });
