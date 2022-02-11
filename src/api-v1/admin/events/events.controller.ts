@@ -7,16 +7,44 @@ const prisma = new PrismaClient();
 export default class EventsController {
   public getEvents = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { phase } = req.body;
-      const data = await prisma.events.findMany({
-        where: { phase: Number(phase) },
+      const currentPhase = await prisma.events.aggregate({
+        _max: {
+          phase: true,
+        },
+      });
+      const eventList = await prisma.events.findMany({
+        where: { phase: Number(currentPhase._max.phase) },
         select: {
           eventId: true,
           eventName: true,
-          eventType: true,
           eventDate: true,
+          phase: true,
         },
       });
+
+      let data = eventList.map((event) => {
+        let date = new Date(event.eventDate);
+        let eventDate =
+          date.getFullYear() +
+          "/" +
+          (date.getMonth() + 1) +
+          "/" +
+          date.getDate() +
+          " " +
+          date.getHours() +
+          ":" +
+          date.getMinutes() +
+          ":" +
+          date.getSeconds();
+        const phase = event.phase;
+        return {
+          eventId: event.eventId,
+          eventName: event.eventName,
+          eventDate: eventDate,
+          phase: phase,
+        };
+      });
+      console.log(data);
       return res.status(200).json({
         message: "Success",
         data,
