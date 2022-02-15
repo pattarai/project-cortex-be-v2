@@ -29,9 +29,9 @@ export default class EventsController {
         let date = new Date(event.eventDate);
         let eventDate =
           date.getFullYear() +
-          "/" +
+          "-" +
           (date.getMonth() + 1) +
-          "/" +
+          "-" +
           date.getDate() +
           " " +
           date.getHours() +
@@ -50,10 +50,27 @@ export default class EventsController {
           phase: phase,
         };
       });
+
+      const committeeList = await prisma.users.findMany({
+        select: {
+          committee: true,
+        },
+        distinct: ["committee"],
+      });
+
+      const projectList = await prisma.users.findMany({
+        select: {
+          project: true,
+        },
+        distinct: ["project"],
+      });
+
       console.log(data);
       return res.status(200).json({
         message: "Success",
         data,
+        committeeList: committeeList.map((committee) => committee.committee),
+        projectList: projectList.map((project) => project.project),
       });
     } catch (e) {
       console.error(e);
@@ -66,7 +83,7 @@ export default class EventsController {
 
   public postEvent = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { eventName, eventType, eventDate, conductedBy, name, phase } =
+      const { eventName, eventType, eventDate, conductedBy, speaker, phase } =
         req.body;
       const _events = await prisma.events.create({
         data: {
@@ -74,7 +91,7 @@ export default class EventsController {
           eventType,
           eventDate,
           conductedBy,
-          name,
+          name: speaker,
           phase,
         },
       });
@@ -126,7 +143,7 @@ export default class EventsController {
         eventType,
         eventDate,
         conductedBy,
-        name,
+        speaker,
         phase,
       } = req.body;
       const _events = await prisma.events.update({
@@ -135,9 +152,9 @@ export default class EventsController {
           eventId,
           eventName,
           eventType,
-          eventDate,
+          eventDate: new Date(eventDate),
           conductedBy,
-          name,
+          name: speaker,
           phase,
         },
       });
