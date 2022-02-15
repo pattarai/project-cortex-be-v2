@@ -115,25 +115,28 @@ export default class RankController {
 
   public getUserRanks = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { userId, phase } = req.body;
+      const { userId } = req.body;
+
       const userDetails = await prisma.ranking.findMany({
         where: {
           userId,
-          factors: { phase },
         },
         select: {
           score: true,
           factors: {
             select: {
+              phase: true,
               factorName: true,
               maxScore: true,
             },
           },
         },
       });
+
+      userDetails.sort((a, b) => b.factors.phase - a.factors.phase);
       return res.status(200).json({
         message: "Success",
-        userDetails,
+        data: userDetails,
       });
     } catch (e) {
       console.error(e);
