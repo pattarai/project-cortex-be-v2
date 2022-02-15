@@ -25,7 +25,7 @@ export default class RankController {
         },
       });
 
-      // current phase total max score calculation
+      // current phase total threshold score calculation
       const totalMaxscore = await prisma.factors.groupBy({
         by: ["phase"],
         where: {
@@ -61,6 +61,9 @@ export default class RankController {
           total,
         };
       });
+
+      // sort by total score in descending order
+      totalScore.sort((a, b) => b.total - a.total);
 
       // 7.5 >="DIAMOND", 6.5 >="GOLD", 5.5 >="SILVER", 4.5 >="BRONZE", 0 >"COPPER"
       const rankDetails = totalScore.map((item) => {
@@ -120,6 +123,12 @@ export default class RankController {
         },
         select: {
           score: true,
+          factors: {
+            select: {
+              factorName: true,
+              maxScore: true,
+            },
+          },
         },
       });
       return res.status(200).json({
