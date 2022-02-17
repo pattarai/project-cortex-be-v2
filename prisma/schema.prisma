@@ -37,6 +37,8 @@ model users {
   expiryDateVerify     String?          @db.VarChar(25)
   forgotPasswordExpiry String?          @db.VarChar(25)
   dateOfBirth          String?          @db.VarChar(25)
+  roleId               Int
+  roles                roles            @relation(fields: [roleId], references: [roleId], onDelete: NoAction, onUpdate: NoAction, map: "FK_roleId_users")
   attendance           attendance[]
   office_bearers       office_bearers[]
   ranking              ranking[]
@@ -58,7 +60,7 @@ model events {
   eventDate           DateTime              @db.Timestamptz(6)
   phase               Int
   conductedBy         String?               @db.VarChar(20)
-  name                String?               @db.VarChar(30)
+  speaker             String?               @db.VarChar(30)
   attendance          attendance[]
   external_attendance external_attendance[]
 }
@@ -101,4 +103,5 @@ model roles {
   role           String           @db.VarChar(50)
   accessLevel    String
   office_bearers office_bearers[]
+  users          users[]
 }
