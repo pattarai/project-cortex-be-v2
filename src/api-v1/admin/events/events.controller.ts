@@ -20,7 +20,7 @@ export default class EventsController {
           eventDate: true,
           eventType: true,
           conductedBy: true,
-          name: true,
+          speaker: true,
           phase: true,
         },
       });
@@ -46,7 +46,7 @@ export default class EventsController {
           eventDate: eventDate,
           eventType: event.eventType,
           conductedBy: event.conductedBy,
-          speaker: event.name,
+          speaker: event.speaker,
           phase: phase,
         };
       });
@@ -89,15 +89,15 @@ export default class EventsController {
         data: {
           eventName,
           eventType,
-          eventDate,
+          eventDate: new Date(eventDate),
           conductedBy,
-          name: speaker,
+          speaker,
           phase,
         },
       });
       return res.status(200).json({
         success: true,
-        _events,
+        data: _events,
       });
     } catch (e) {
       console.error(e);
@@ -117,7 +117,7 @@ export default class EventsController {
           eventName: true,
           eventType: true,
           eventDate: true,
-          name: true,
+          speaker: true,
           conductedBy: true,
           phase: true,
         },
@@ -154,13 +154,38 @@ export default class EventsController {
           eventType,
           eventDate: new Date(eventDate),
           conductedBy,
-          name: speaker,
+          speaker,
           phase,
         },
       });
+
+      let date = new Date(_events.eventDate);
+      let eventdate =
+        date.getFullYear() +
+        "-" +
+        (date.getMonth() + 1) +
+        "-" +
+        date.getDate() +
+        " " +
+        date.getHours() +
+        ":" +
+        date.getMinutes() +
+        ":" +
+        date.getSeconds();
+
+      const data = {
+        eventId: _events.eventId,
+        eventName: _events.eventName,
+        eventType: _events.eventType,
+        eventDate: eventdate,
+        conductedBy: _events.conductedBy,
+        speaker: _events.speaker,
+        phase: _events.phase,
+      };
+
       return res.json({
         success: true,
-        data: _events,
+        data: data,
       });
     } catch (e) {
       console.error(e);
