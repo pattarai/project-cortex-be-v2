@@ -93,7 +93,7 @@ export default class UsermanagementController {
   public updateUser = async (req: Request, res: Response): Promise<any> => {
     try {
       const { userId, role, startDate, ...userDetails } = req.body;
-      const roleId = await prisma.roles.findFirst({
+      const { roleId } = await prisma.roles.findFirst({
         where: {
           role,
         },
@@ -107,7 +107,7 @@ export default class UsermanagementController {
         },
         data: {
           startDate: new Date(startDate),
-          roleId: roleId.roleId,
+          roleId,
           ...userDetails,
         },
       });
