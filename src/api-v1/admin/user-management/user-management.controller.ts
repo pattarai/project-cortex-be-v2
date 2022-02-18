@@ -72,8 +72,12 @@ export default class UsermanagementController {
       });
       const user = await prisma.users.create({
         data: {
+          roles: {
+            connect: {
+              roleId,
+            },
+          },
           startDate: new Date(startDate),
-          roleId,
           ...userDetails,
         },
       });
