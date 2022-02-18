@@ -7,6 +7,9 @@ export default class UsermanagementController {
   public getUser = async (req: Request, res: Response): Promise<any> => {
     try {
       const user = await prisma.users.findMany({
+        where: {
+          status: true,
+        },
         select: {
           userId: true,
           email: true,
@@ -15,7 +18,12 @@ export default class UsermanagementController {
           project: true,
           committee: true,
           startDate: true,
-          isActive: true,
+          status: true,
+          roles: {
+            select: {
+              role: true,
+            },
+          },
         },
       });
       return res.status(200).json({
@@ -84,7 +92,7 @@ export default class UsermanagementController {
           userId,
         },
         data: {
-          isActive: false,
+          status: false,
         },
       });
       return res.status(200).json({
