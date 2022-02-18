@@ -113,7 +113,7 @@ export default class UsermanagementController {
         },
       });
       return res.status(200).json({
-        message: "Success",
+        success: true,
         user,
       });
     } catch (e) {
