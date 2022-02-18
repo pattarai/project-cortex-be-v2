@@ -94,13 +94,22 @@ export default class UsermanagementController {
 
   public updateUser = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { userId, ...details } = req.body;
+      const { userId, role, ...userDetails } = req.body;
+      const roleId = await prisma.roles.findFirst({
+        where: {
+          role,
+        },
+        select: {
+          roleId: true,
+        },
+      });
       const user = await prisma.users.update({
         where: {
           userId,
         },
         data: {
-          ...details,
+          roleId,
+          ...userDetails,
         },
       });
       return res.status(200).json({
