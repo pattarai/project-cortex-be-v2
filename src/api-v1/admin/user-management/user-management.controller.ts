@@ -28,7 +28,7 @@ export default class UsermanagementController {
 
       const users = await prisma.users.findMany({
         where: {
-          status: true,
+          status: 1,
         },
         select: {
           userId: true,
@@ -133,11 +133,11 @@ export default class UsermanagementController {
           userId,
         },
         data: {
-          status: false,
+          status: 0,
         },
       });
       return res.status(200).json({
-        message: "Success",
+        success: true,
       });
     } catch (e) {
       console.error(e);
