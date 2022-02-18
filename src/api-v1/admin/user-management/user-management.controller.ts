@@ -6,7 +6,27 @@ const prisma = new PrismaClient();
 export default class UsermanagementController {
   public getUser = async (req: Request, res: Response): Promise<any> => {
     try {
-      const user = await prisma.users.findMany({
+      const committeeList = await prisma.users.findMany({
+        select: {
+          committee: true,
+        },
+        distinct: ["committee"],
+      });
+
+      const projectList = await prisma.users.findMany({
+        select: {
+          project: true,
+        },
+        distinct: ["project"],
+      });
+
+      const rolesList = await prisma.roles.findMany({
+        select: {
+          role: true,
+        },
+      });
+
+      const users = await prisma.users.findMany({
         where: {
           status: true,
         },
@@ -27,8 +47,11 @@ export default class UsermanagementController {
         },
       });
       return res.status(200).json({
-        message: "Success",
-        user,
+        success: true,
+        users,
+        committeeList: committeeList.map((committee) => committee.committee),
+        projectList: projectList.map((project) => project.project),
+        roleList: rolesList.map((roles) => roles.role),
       });
     } catch (e) {
       console.error(e);
