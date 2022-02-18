@@ -27,9 +27,6 @@ export default class UsermanagementController {
       });
 
       const users = await prisma.users.findMany({
-        where: {
-          status: 1,
-        },
         select: {
           userId: true,
           email: true,
