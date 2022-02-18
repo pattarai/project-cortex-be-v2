@@ -127,12 +127,9 @@ export default class UsermanagementController {
   public deleteUser = async (req: Request, res: Response): Promise<any> => {
     try {
       const { userId } = req.body;
-      await prisma.users.update({
+      await prisma.users.delete({
         where: {
           userId,
-        },
-        data: {
-          status: 0,
         },
       });
       return res.status(200).json({
