@@ -31,7 +31,7 @@ model users {
   committee            String           @db.VarChar(100)
   project              String           @db.VarChar(100)
   startDate            DateTime         @db.Timestamptz(6)
-  status               Boolean          @default(true)
+  status               Int              @default(1)
   phase                Int?
   isCompleted          Boolean?         @default(false)
   expiryDateVerify     String?          @db.VarChar(25)
