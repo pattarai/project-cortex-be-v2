@@ -31,6 +31,15 @@ export default class FactorsController {
   public postFactors = async (req: Request, res: Response): Promise<any> => {
     try {
       const { factorName, maxScore, phase } = req.body;
+
+      let userIdList: any = [];
+
+      type User = {
+        userId: number;
+        factorId: number;
+        score: number;
+      };
+
       const postFactors = await prisma.factors.create({
         data: {
           factorName,
@@ -38,9 +47,28 @@ export default class FactorsController {
           maxScore,
         },
       });
+      console.log(postFactors);
+      const getUsers = await prisma.users.findMany({
+        select: {
+          userId: true,
+        },
+      });
+      const postRanks = await prisma.$transaction(
+        (userIdList = getUsers.map((user: User) =>
+          prisma.ranking.create({
+            data: {
+              factorId: postFactors.factorId,
+              score: 0,
+              userId: user.userId,
+            },
+          })
+        ))
+      );
+
       return res.status(200).json({
         success: true,
         postFactors,
+        postRanks,
       });
     } catch (e) {
       console.error(e);
