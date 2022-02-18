@@ -64,14 +64,23 @@ export default class UsermanagementController {
 
   public createUser = async (req: Request, res: Response): Promise<any> => {
     try {
-      const userDetails = req.body;
+      const { role, ...userDetails } = req.body;
+      const roleId = await prisma.roles.findFirst({
+        where: {
+          role,
+        },
+        select: {
+          roleId: true,
+        },
+      });
       const user = await prisma.users.create({
         data: {
+          roleId,
           ...userDetails,
         },
       });
       return res.status(200).json({
-        message: "Success",
+        success: true,
         user,
       });
     } catch (e) {
