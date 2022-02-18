@@ -61,8 +61,8 @@ export default class UsermanagementController {
 
   public createUser = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { role, startDate, ...userDetails } = req.body;
-      const roleId = await prisma.roles.findFirst({
+      const { role, startDate, userId, ...userDetails } = req.body;
+      const { roleId } = await prisma.roles.findFirst({
         where: {
           role,
         },
@@ -73,7 +73,7 @@ export default class UsermanagementController {
       const user = await prisma.users.create({
         data: {
           startDate: new Date(startDate),
-          roleId: roleId.roleId,
+          roleId,
           ...userDetails,
         },
       });
