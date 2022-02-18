@@ -107,17 +107,15 @@ export default class FactorsController {
   public deleteFactors = async (req: Request, res: Response): Promise<any> => {
     try {
       const { factorId } = req.body;
+      const deleteRanks = await prisma.ranking.deleteMany({
+        where: { factorId },
+      });
       const deleteFactors = await prisma.factors.delete({
         where: { factorId },
-        select: {
-          factorId: true,
-          factorName: true,
-          phase: true,
-          maxScore: true,
-        },
       });
       return res.status(200).json({
         success: true,
+        deleteRanks,
         deleteFactors,
       });
     } catch (e) {
