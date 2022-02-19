@@ -31,6 +31,15 @@ export default class FactorsController {
   public postFactors = async (req: Request, res: Response): Promise<any> => {
     try {
       const { factorName, maxScore, phase } = req.body;
+
+      let userIdList: any = [];
+
+      type User = {
+        userId: number;
+        factorId: number;
+        score: number;
+      };
+
       const postFactors = await prisma.factors.create({
         data: {
           factorName,
@@ -38,9 +47,28 @@ export default class FactorsController {
           maxScore,
         },
       });
+      console.log(postFactors);
+      const getUsers = await prisma.users.findMany({
+        select: {
+          userId: true,
+        },
+      });
+      const postRanks = await prisma.$transaction(
+        (userIdList = getUsers.map((user: User) =>
+          prisma.ranking.create({
+            data: {
+              factorId: postFactors.factorId,
+              score: 0,
+              userId: user.userId,
+            },
+          })
+        ))
+      );
+
       return res.status(200).json({
         success: true,
         postFactors,
+        postRanks,
       });
     } catch (e) {
       console.error(e);
@@ -79,17 +107,15 @@ export default class FactorsController {
   public deleteFactors = async (req: Request, res: Response): Promise<any> => {
     try {
       const { factorId } = req.body;
+      const deleteRanks = await prisma.ranking.deleteMany({
+        where: { factorId },
+      });
       const deleteFactors = await prisma.factors.delete({
         where: { factorId },
-        select: {
-          factorId: true,
-          factorName: true,
-          phase: true,
-          maxScore: true,
-        },
       });
       return res.status(200).json({
         success: true,
+        deleteRanks,
         deleteFactors,
       });
     } catch (e) {

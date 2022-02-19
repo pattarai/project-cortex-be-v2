@@ -10,7 +10,7 @@ datasource db {
 model users {
   userId               Int              @id(map: "public.users_pkey") @default(dbgenerated("nextval('\"public.users_userId_seq\"'::regclass)"))
   email                String           @db.VarChar(100)
-  password             String           @db.VarChar(50)
+  password             String?          @db.VarChar(50)
   verifyEmail          String?          @db.VarChar(100)
   phone                String?          @db.VarChar(15)
   forgotPasswordKey    String?          @db.VarChar(100)

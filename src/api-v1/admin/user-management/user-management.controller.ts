@@ -27,9 +27,6 @@ export default class UsermanagementController {
       });
 
       const users = await prisma.users.findMany({
-        where: {
-          status: 1,
-        },
         select: {
           userId: true,
           email: true,
@@ -64,8 +61,8 @@ export default class UsermanagementController {
 
   public createUser = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { role, ...userDetails } = req.body;
-      const roleId = await prisma.roles.findFirst({
+      const { role, startDate, userId, ...userDetails } = req.body;
+      const { roleId } = await prisma.roles.findFirst({
         where: {
           role,
         },
@@ -75,7 +72,12 @@ export default class UsermanagementController {
       });
       const user = await prisma.users.create({
         data: {
-          roleId,
+          roles: {
+            connect: {
+              roleId,
+            },
+          },
+          startDate: new Date(startDate),
           ...userDetails,
         },
       });
@@ -94,8 +96,8 @@ export default class UsermanagementController {
 
   public updateUser = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { userId, role, ...userDetails } = req.body;
-      const roleId = await prisma.roles.findFirst({
+      const { userId, role, startDate, ...userDetails } = req.body;
+      const { roleId } = await prisma.roles.findFirst({
         where: {
           role,
         },
@@ -108,6 +110,7 @@ export default class UsermanagementController {
           userId,
         },
         data: {
+          startDate: new Date(startDate),
           roleId,
           ...userDetails,
         },
@@ -128,12 +131,9 @@ export default class UsermanagementController {
   public deleteUser = async (req: Request, res: Response): Promise<any> => {
     try {
       const { userId } = req.body;
-      await prisma.users.update({
+      await prisma.users.delete({
         where: {
           userId,
-        },
-        data: {
-          status: 0,
         },
       });
       return res.status(200).json({
