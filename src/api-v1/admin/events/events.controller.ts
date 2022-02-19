@@ -65,12 +65,18 @@ export default class EventsController {
         distinct: ["project"],
       });
 
-      console.log(data);
+      const phaseList = await prisma.events.findMany({
+        distinct: ["phase"],
+        select: {
+          phase: true,
+        },
+      });
       return res.status(200).json({
         message: "Success",
         data,
         committeeList: committeeList.map((committee) => committee.committee),
         projectList: projectList.map((project) => project.project),
+        phaseList: phaseList.map((phase) => phase.phase),
       });
     } catch (e) {
       console.error(e);
@@ -95,9 +101,34 @@ export default class EventsController {
           phase,
         },
       });
+
+      let date = new Date(_events.eventDate);
+      let eventdate =
+        date.getFullYear() +
+        "-" +
+        (date.getMonth() + 1) +
+        "-" +
+        date.getDate() +
+        " " +
+        date.getHours() +
+        ":" +
+        date.getMinutes() +
+        ":" +
+        date.getSeconds();
+
+      const data = {
+        eventId: _events.eventId,
+        eventName: _events.eventName,
+        eventType: _events.eventType,
+        eventDate: eventdate,
+        conductedBy: _events.conductedBy,
+        speaker: _events.speaker,
+        phase: _events.phase,
+      };
+
       return res.status(200).json({
         success: true,
-        data: _events,
+        data: data,
       });
     } catch (e) {
       console.error(e);
