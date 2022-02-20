@@ -7,7 +7,6 @@ const ranksController = new RanksController();
 ranks
   .route("/")
   .get(ranksController.getRanks)
-  .post(ranksController.postRanks)
   .patch(ranksController.patchRanks);
 
 export default ranks;

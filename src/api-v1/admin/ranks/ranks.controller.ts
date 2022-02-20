@@ -33,9 +33,9 @@ export default class RanksController {
     }
   };
 
-  public postRanks = async (req: Request, res: Response): Promise<any> => {
+  public patchRanks = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { factorId, userId, score } = req.body;
+      const { rankId, userId, factorId, score } = req.body;
       const maxScore = await prisma.factors.findMany({
         where: { factorId },
         select: {
@@ -43,16 +43,15 @@ export default class RanksController {
         },
       });
       if (score <= maxScore[0].maxScore) {
-        const postRanks = await prisma.ranking.create({
+        const patchRanks = await prisma.ranking.updateMany({
+          where: { rankId, userId, factorId },
           data: {
-            factorId,
-            userId,
             score,
           },
         });
         return res.status(200).json({
           success: true,
-          postRanks,
+          patchRanks,
         });
       } else {
         return res.status(200).json({
@@ -60,28 +59,6 @@ export default class RanksController {
           message: "Score is greater than max score",
         });
       }
-    } catch (e) {
-      console.error(e);
-      res.status(500).send({
-        success: false,
-        message: e.toString(),
-      });
-    }
-  };
-
-  public patchRanks = async (req: Request, res: Response): Promise<any> => {
-    try {
-      const { rankId, userId, factorId, score } = req.body;
-      const patchRanks = await prisma.ranking.updateMany({
-        where: { rankId, userId, factorId },
-        data: {
-          score,
-        },
-      });
-      return res.status(200).json({
-        success: true,
-        patchRanks,
-      });
     } catch (e) {
       console.error(e);
       res.status(500).send({
