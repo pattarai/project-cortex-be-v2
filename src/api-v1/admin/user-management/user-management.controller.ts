@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { hash } from "bcryptjs"
+
 
 const prisma = new PrismaClient();
 
@@ -61,7 +63,7 @@ export default class UsermanagementController {
 
   public createUser = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { role, startDate, userId, ...userDetails } = req.body;
+      const { role, startDate, userId, password, ...userDetails } = req.body;
       const { roleId } = await prisma.roles.findFirst({
         where: {
           role,
@@ -70,8 +72,10 @@ export default class UsermanagementController {
           roleId: true,
         },
       });
+      const hashedPassword = await hash(password, 10);
       const user = await prisma.users.create({
         data: {
+          password: hashedPassword,
           roles: {
             connect: {
               roleId,
