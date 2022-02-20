@@ -13,14 +13,34 @@ export default class CompleteProfile {
     ): Promise<any> => {
         try {
             const { userId } = req.body;
-            const _user = await prisma.users.findFirst({
+            const user = await prisma.users.findFirst({
                 where: {
                     userId,
-                },
+                }, select: {
+                    userId: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                    committee: true,
+                    project: true,
+                    roleId: true,
+                    dateOfBirth: true,
+                    collegeName: true,
+                    department: true,
+                    year: true,
+                    rollNumber: true,
+                    registerNumber: true,
+                    whatsappNumber: true,
+                    instagramUrl: true,
+                    githubUrl: true,
+                    linkedInUrl: true,
+                    description: true,
+
+                }
             });
             return res.json({
                 success: true,
-                data: _user,
+                data: user,
             });
         } catch (err) {
             return res.status(500).json({
@@ -61,7 +81,7 @@ export default class CompleteProfile {
                 bitmojiFile.mv(bitmojiPath);
             }
 
-            const _user = await prisma.users.update({
+            const user = await prisma.users.update({
                 where: {
                     userId: Number(userId),
                 },
@@ -82,7 +102,7 @@ export default class CompleteProfile {
 
             return res.json({
                 success: true,
-                data: _user,
+                data: user,
             });
         } catch (err) {
             return res.status(500).json({
