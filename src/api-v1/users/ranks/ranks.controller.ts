@@ -155,6 +155,21 @@ export default class RankController {
         })
       );
 
+      // FORMULA : (sum(score) / sum(maxScore)) * 10
+      const totalScoreByPhase = totalSum.map((item: any, index: number) => {
+        let total = 0;
+        maxScore.forEach((max: any, keyy: number) => {
+          if (index === keyy) {
+            total = parseFloat(
+              Math.abs((item._sum.score / max._sum.maxScore) * 10).toPrecision(
+                3
+              )
+            );
+          }
+        });
+        return total;
+      });
+
       const userDetails = await prisma.ranking.findMany({
         where: {
           userId,
