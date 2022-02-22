@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs"
-import { sendPassword } from "../../../helpers/sendPassword"
-
+import { hash } from "bcryptjs";
+import { sendPassword } from "../../../helpers/sendPassword";
 
 const prisma = new PrismaClient();
 
@@ -64,7 +63,8 @@ export default class UsermanagementController {
 
   public createUser = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { role, startDate, userId, password, email, ...userDetails } = req.body;
+      const { role, startDate, userId, password, email, ...userDetails } =
+        req.body;
       const { roleId } = await prisma.roles.findFirst({
         where: {
           role,
@@ -73,20 +73,21 @@ export default class UsermanagementController {
           roleId: true,
         },
       });
-      sendPassword(email, password)
       const hashedPassword = await hash(password, 10);
       const user = await prisma.users.create({
         data: {
-          password: hashedPassword,
           roles: {
             connect: {
               roleId,
             },
           },
+          email,
+          password: hashedPassword,
           startDate: new Date(startDate),
           ...userDetails,
         },
       });
+      sendPassword(email, password);
       return res.status(200).json({
         success: true,
         user,
