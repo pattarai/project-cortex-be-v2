@@ -35,9 +35,9 @@ model users {
   isCompleted          Boolean?         @default(false)
   expiryDateVerify     String?          @db.VarChar(25)
   forgotPasswordExpiry String?          @db.VarChar(25)
-  dateOfBirth          String?          @db.VarChar(25)
   roleId               Int
   status               Int              @default(1)
+  dateOfBirth          DateTime?        @db.Timestamptz(6)
   roles                roles            @relation(fields: [roleId], references: [roleId], onDelete: NoAction, onUpdate: NoAction, map: "FK_roleId_users")
   attendance           attendance[]
   office_bearers       office_bearers[]
