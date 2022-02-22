@@ -6,9 +6,12 @@ const prisma = new PrismaClient();
 export default class ProfileController {
   public getProfile = async (req: Request, res: Response): Promise<any> => {
     try {
+      const { userId } = req.body;
       const users = await prisma.users.findMany({
+        where: {
+          userId: 7,
+        },
         select: {
-          userId: true,
           firstName: true,
           lastName: true,
           email: true,

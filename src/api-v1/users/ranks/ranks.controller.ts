@@ -117,6 +117,59 @@ export default class RankController {
     try {
       const { userId } = req.body;
 
+      // // total score calculation for each user
+      const phase = await prisma.factors.findMany({
+        distinct: ["phase"],
+        select: {
+          phase: true,
+        },
+      });
+
+      const totalSum = await Promise.all(
+        phase.map(async (item) => {
+          const total = await prisma.ranking.aggregate({
+            where: {
+              userId,
+              factors: {
+                phase: item.phase,
+              },
+            },
+            _sum: {
+              score: true,
+            },
+          });
+          return total;
+        })
+      );
+
+      //current phase total threshold score calculation
+      const maxScore = await Promise.all(
+        phase.map(async (item) => {
+          const total = await prisma.factors.aggregate({
+            where: {
+              phase: item.phase,
+            },
+            _sum: { maxScore: true },
+          });
+          return total;
+        })
+      );
+
+      // FORMULA : (sum(score) / sum(maxScore)) * 10
+      const totalScoreByPhase = totalSum.map((item: any, index: number) => {
+        let total = 0;
+        maxScore.forEach((max: any, keyy: number) => {
+          if (index === keyy) {
+            total = parseFloat(
+              Math.abs((item._sum.score / max._sum.maxScore) * 10).toPrecision(
+                3
+              )
+            );
+          }
+        });
+        return total;
+      });
+
       const userDetails = await prisma.ranking.findMany({
         where: {
           userId,
@@ -134,9 +187,10 @@ export default class RankController {
       });
 
       userDetails.sort((a, b) => b.factors.phase - a.factors.phase);
+
       return res.status(200).json({
         message: "Success",
-        data: userDetails,
+        data: { userDetails, totalScoreByPhase },
       });
     } catch (e) {
       console.error(e);

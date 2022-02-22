@@ -23,6 +23,7 @@
   "homepage": "https://github.com/fabianferno/express-typescript-boilerplate#readme",
   "dependencies": {
     "@prisma/client": "3.8.1",
+    "bcryptjs": "2.4.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
@@ -31,9 +32,11 @@
     "express-jwt": "^6.1.0",
     "helmet": "^4.6.0",
     "http-status": "^1.2.0",
+    "jsonwebtoken": "8.5.1",
     "jwks-rsa": "^2.0.5",
     "morgan": "^1.10.0",
-    "nocache": "^3.0.1"
+    "nocache": "^3.0.1",
+    "nodemailer": "6.7.2"
   },
   "devDependencies": {
     "@types/dotenv": "^4.0.3",
