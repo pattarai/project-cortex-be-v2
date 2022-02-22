@@ -86,7 +86,7 @@ export default class CompleteProfile {
                     userId: Number(userId),
                 },
                 data: {
-                    dateOfBirth,
+                    dateOfBirth: new Date(dateOfBirth),
                     collegeName,
                     department,
                     year: Number(year),
