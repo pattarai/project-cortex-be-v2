@@ -40,7 +40,7 @@ export default class CompleteProfile {
             });
             return res.json({
                 success: true,
-                data: user,
+                user,
             });
         } catch (err) {
             return res.status(500).json({
@@ -102,7 +102,7 @@ export default class CompleteProfile {
 
             return res.json({
                 success: true,
-                data: user,
+                user,
             });
         } catch (err) {
             return res.status(500).json({
