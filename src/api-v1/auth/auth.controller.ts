@@ -59,10 +59,7 @@ export default class AuthController {
     //     }
     // };
 
-    public login = async (
-        req: Request,
-        res: Response
-    ): Promise<any> => {
+    public login = async (req: Request, res: Response): Promise<any> => {
         try {
             const { email, password } = req.body
             if (email && password) {
@@ -75,30 +72,45 @@ export default class AuthController {
                     compare(password, user.password, (err, isMatch: boolean) => {
                         if (isMatch) {
                             let payload = { userId: user.userId, email: user.email, roleId: user.roleId }
-                            let token = sign(payload, process.env.JWT_AUTH_SECRET, { expiresIn: "1h" })
+                            let token = sign({ payload }, process.env.JWT_AUTH_SECRET, { expiresIn: "1h" })
                             res.json({
-                                status: true,
+                                success: true,
                                 token
                             })
                         } else {
                             res.json({
-                                status: false,
+                                success: false,
                                 message: "Invalid password"
                             })
                         }
                     })
                 } else {
                     res.json({
-                        status: false,
+                        success: false,
                         message: "User not found"
                     })
                 }
             } else {
                 res.json({
-                    status: false,
+                    success: false,
                     message: "Please provide all the required fields"
                 })
             }
+        }
+        catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.toString(),
+            });
+        }
+    }
+
+    public checkUser = async (req: Request, res: Response): Promise<any> => {
+        try {
+            res.json({
+                success: true,
+                user: res.locals.user
+            })
         }
         catch (err) {
             return res.status(500).json({
