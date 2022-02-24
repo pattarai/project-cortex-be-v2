@@ -57,8 +57,7 @@ export default class AttendanceController {
         },
       });
 
-      const statusCount = { absentCount, presentCount, informedCount };
-
+      const statusCount = [absentCount, presentCount, informedCount];
       return res.status(200).json({
         success: true,
         requestedPhaseEvents,
