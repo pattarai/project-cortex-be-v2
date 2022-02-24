@@ -117,7 +117,7 @@ export default class RankController {
     try {
       const { userId } = req.body;
 
-      // // total score calculation for each user
+      // get all distinct phases
       const phase = await prisma.factors.findMany({
         distinct: ["phase"],
         select: {
@@ -125,6 +125,7 @@ export default class RankController {
         },
       });
 
+      // get totalsum of scores for each phase
       const totalSum = await Promise.all(
         phase.map(async (item) => {
           const total = await prisma.ranking.aggregate({
@@ -142,7 +143,7 @@ export default class RankController {
         })
       );
 
-      //current phase total threshold score calculation
+      //threshold score calculation for each phase
       const maxScore = await Promise.all(
         phase.map(async (item) => {
           const total = await prisma.factors.aggregate({
