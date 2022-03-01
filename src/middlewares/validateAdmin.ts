@@ -8,7 +8,7 @@ export const validateAdmin = async (req: Request, res: Response, next: NextFunct
         verify(token, jwtSecret, (err, decoded: any) => {
             if (err) {
                 res.json({
-                    status: false,
+                    success: false,
                     message: "Invalid token"
                 })
             } else {
@@ -17,7 +17,7 @@ export const validateAdmin = async (req: Request, res: Response, next: NextFunct
                     next()
                 } else {
                     res.json({
-                        status: false,
+                        success: false,
                         message: "You are not authorized to perform this action"
                     })
                 }
@@ -25,7 +25,7 @@ export const validateAdmin = async (req: Request, res: Response, next: NextFunct
         })
     } else {
         res.json({
-            status: false,
+            success: false,
             message: "Please provide token"
         })
     }

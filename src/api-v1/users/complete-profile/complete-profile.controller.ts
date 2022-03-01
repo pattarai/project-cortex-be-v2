@@ -50,25 +50,19 @@ export default class CompleteProfile {
     }
   };
 
-  public completeProfilePatch = async (
-    req: Request,
-    res: Response
-  ): Promise<any> => {
-    try {
-      const {
-        userId,
-        dateOfBirth,
-        collegeName,
-        department,
-        year,
-        rollNumber,
-        registerNumber,
-        whatsappNumber,
-        instagramUrl,
-        githubUrl,
-        linkedInUrl,
-        description,
-      } = req.body;
+                }
+            });
+            return res.json({
+                success: true,
+                user,
+            });
+        } catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.toString(),
+            });
+        }
+    };
 
       let profilePicFile = req.files.profilePic as UploadedFile;
       let bitmojiFile = req.files.bitmojiPic as UploadedFile;
@@ -100,15 +94,34 @@ export default class CompleteProfile {
         },
       });
 
-      return res.json({
-        success: true,
-        data: user,
-      });
-    } catch (err) {
-      return res.status(500).json({
-        success: false,
-        message: err.toString(),
-      });
-    }
-  };
+            const user = await prisma.users.update({
+                where: {
+                    userId: Number(userId),
+                },
+                data: {
+                    dateOfBirth: new Date(dateOfBirth),
+                    collegeName,
+                    department,
+                    year: Number(year),
+                    rollNumber,
+                    registerNumber,
+                    whatsappNumber,
+                    instagramUrl,
+                    githubUrl,
+                    linkedInUrl,
+                    description,
+                },
+            });
+
+            return res.json({
+                success: true,
+                user,
+            });
+        } catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.toString(),
+            });
+        }
+    };
 }

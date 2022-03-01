@@ -4,9 +4,6 @@ import AttendanceController from "./attendance.controller";
 const attendance: Router = Router();
 const attendanceController = new AttendanceController();
 
-attendance
-    .route("/")
-    .get(attendanceController.getAttendance)
-
+attendance.route("/").post(attendanceController.getAttendance);
 
 export default attendance;

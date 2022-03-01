@@ -8,7 +8,7 @@ export const validateUser = async (req: Request, res: Response, next: NextFuncti
         verify(token, jwtSecret, (err, decoded: any) => {
             if (err) {
                 res.json({
-                    status: false,
+                    success: false,
                     message: "Invalid token"
                 })
             } else {
@@ -18,7 +18,7 @@ export const validateUser = async (req: Request, res: Response, next: NextFuncti
         })
     } else {
         res.json({
-            status: false,
+            success: false,
             message: "Please provide token"
         })
     }
