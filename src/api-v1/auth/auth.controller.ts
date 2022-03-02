@@ -7,57 +7,6 @@ import { sign } from "jsonwebtoken"
 const prisma = new PrismaClient();
 
 export default class AuthController {
-    // public register = async (
-    //     req: Request,
-    //     res: Response
-    // ): Promise<any> => {
-    //     try {
-    //         const { email, password, firstName, lastName, committee, project, startDate, roleId } = req.body;
-    //         let user = await prisma.users.findFirst({
-    //             where: {
-    //                 email
-    //             }
-    //         })
-    //         if (user) {
-    //             return res.json({
-    //                 success: false,
-    //                 message: "User already exists"
-    //             })
-    //         } else {
-    //             hash(password, 10, (err: string, hash: string) => {
-    //                 if (err) {
-    //                     return res.json({
-    //                         success: false,
-    //                         message: "Error hashing password"
-    //                     })
-    //                 } else {
-    //                     let createdUser = prisma.users.create({
-    //                         data: {
-    //                             email,
-    //                             password: hash,
-    //                             firstName,
-    //                             lastName,
-    //                             committee,
-    //                             project,
-    //                             startDate,
-    //                             roleId
-    //                         }
-    //                     })
-    //                     return res.json({
-    //                         success: true,
-    //                         message: "User created",
-    //                         user: createdUser
-    //                     })
-    //                 }
-    //             })
-    //         }
-    //     } catch (err) {
-    //         return res.status(500).json({
-    //             success: false,
-    //             message: err.toString(),
-    //         });
-    //     }
-    // };
 
     public login = async (req: Request, res: Response): Promise<any> => {
         try {
