@@ -69,21 +69,26 @@ export default class AuthController {
                     }
                 })
                 if (user) {
-                    compare(password, user.password, (err, isMatch: boolean) => {
-                        if (isMatch) {
-                            let payload = { userId: user.userId, email: user.email, roleId: user.roleId }
-                            let token = sign({ payload }, process.env.JWT_AUTH_SECRET, { expiresIn: "1h" })
-                            res.json({
-                                success: true,
-                                token
-                            })
-                        } else {
-                            res.json({
-                                success: false,
-                                message: "Invalid password"
-                            })
-                        }
-                    })
+                    let isMatch = await compare(password, user.password)
+                    if (isMatch) {
+                        let currentPhase = await prisma.events.aggregate({
+                            _max: {
+                                phase: true
+                            }
+                        })
+                        let payload = { userId: user.userId, roleId: user.roleId, currentPhase: currentPhase._max.phase }
+                        let token = await sign({ payload }, process.env.JWT_AUTH_SECRET, { expiresIn: "1h" })
+                        res.json({
+                            success: true,
+                            token
+                        })
+                    }
+                    else {
+                        res.json({
+                            success: false,
+                            message: "Invalid password"
+                        })
+                    }
                 } else {
                     res.json({
                         success: false,
