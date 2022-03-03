@@ -13,9 +13,9 @@ export default class CompleteProfile {
   ): Promise<any> => {
     try {
       const { userId } = req.body;
-      const user = await prisma.users.findMany({
+      const user = await prisma.users.findFirst({
         where: {
-          userId: 11,
+          userId: 7,
         },
         select: {
           userId: true,
@@ -40,7 +40,7 @@ export default class CompleteProfile {
       });
       return res.json({
         success: true,
-        data: user,
+        user,
       });
     } catch (err) {
       return res.status(500).json({
@@ -50,19 +50,25 @@ export default class CompleteProfile {
     }
   };
 
-                }
-            });
-            return res.json({
-                success: true,
-                user,
-            });
-        } catch (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.toString(),
-            });
-        }
-    };
+  public completeProfilePatch = async (
+    req: Request,
+    res: Response
+  ): Promise<any> => {
+    try {
+      const {
+        userId,
+        dateOfBirth,
+        collegeName,
+        department,
+        year,
+        rollNumber,
+        registerNumber,
+        whatsappNumber,
+        instagramUrl,
+        githubUrl,
+        linkedInUrl,
+        description,
+      } = req.body;
 
       let profilePicFile = req.files.profilePic as UploadedFile;
       let bitmojiFile = req.files.bitmojiPic as UploadedFile;
@@ -80,7 +86,7 @@ export default class CompleteProfile {
           userId: Number(userId),
         },
         data: {
-          dateOfBirth,
+          dateOfBirth: new Date(dateOfBirth),
           collegeName,
           department,
           year: Number(year),
@@ -94,34 +100,15 @@ export default class CompleteProfile {
         },
       });
 
-            const user = await prisma.users.update({
-                where: {
-                    userId: Number(userId),
-                },
-                data: {
-                    dateOfBirth: new Date(dateOfBirth),
-                    collegeName,
-                    department,
-                    year: Number(year),
-                    rollNumber,
-                    registerNumber,
-                    whatsappNumber,
-                    instagramUrl,
-                    githubUrl,
-                    linkedInUrl,
-                    description,
-                },
-            });
-
-            return res.json({
-                success: true,
-                user,
-            });
-        } catch (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.toString(),
-            });
-        }
-    };
+      return res.json({
+        success: true,
+        user,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.toString(),
+      });
+    }
+  };
 }
