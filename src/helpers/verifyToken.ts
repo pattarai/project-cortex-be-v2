@@ -7,11 +7,11 @@ var jwtAuthCheck = jwt({
     rateLimit: true,
     jwksRequestsPerMinute: 5,
     jwksUri: `${
-      process.env.AUTH0_ISSUER_BASE_URL // "https://fabianferno.us.auth0.com/"
+      process.env.AUTH0_ISSUER_BASE_URL
     }.well-known/jwks.json`,
   }),
   audience: process.env.APP_BASE_URL, // "http://localhost:5000",
-  issuer: process.env.AUTH0_ISSUER_BASE_URL, // "https://fabianferno.us.auth0.com/",
+  issuer: process.env.AUTH0_ISSUER_BASE_URL, 
   algorithms: ["RS256"],
 });
 

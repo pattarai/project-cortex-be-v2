@@ -12,7 +12,7 @@ export default class AttendanceController {
         where: {
           eventName,
           eventType,
-          eventDate,
+          eventDate: new Date(eventDate),
         },
         select: {
           eventId: true,
@@ -37,6 +37,7 @@ export default class AttendanceController {
           },
           external_attendance: {
             select: {
+              externalId: true,
               name: true,
             },
           },
@@ -92,8 +93,16 @@ export default class AttendanceController {
     try {
       const { crewAttendance, externalAttendance } = req.body;
 
+      const newCrewAttendance = crewAttendance.map((attendance) => {
+        return {
+          userId: attendance.userId,
+          eventId: attendance.eventId,
+          status: attendance.status,
+        };
+      });
+
       const crewattendance = await prisma.attendance.createMany({
-        data: [...crewAttendance],
+        data: [...newCrewAttendance],
       });
 
       let externalAttendanceList: any = [];
@@ -103,7 +112,7 @@ export default class AttendanceController {
         });
       }
       return res.status(200).json({
-        message: "Success",
+        success: true,
         crewattendance,
         externalAttendanceList,
       });
@@ -139,7 +148,7 @@ export default class AttendanceController {
       );
 
       res.status(200).send({
-        message: "success",
+        success: true,
       });
     } catch (e) {
       console.error(e);
@@ -157,7 +166,7 @@ export default class AttendanceController {
       const externalList = await prisma.external_attendance.delete({
         where: { externalId },
       });
-      return res.status(200).json({ message: "Success", externalList });
+      return res.status(200).json({ success: true, externalList });
     } catch (e) {
       console.error(e);
       res.status(500).send({

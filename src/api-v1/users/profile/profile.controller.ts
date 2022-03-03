@@ -7,9 +7,9 @@ export default class ProfileController {
   public getProfile = async (req: Request, res: Response): Promise<any> => {
     try {
       const { userId } = req.body;
-      const users = await prisma.users.findMany({
+      const users = await prisma.users.findFirst({
         where: {
-          userId: 7,
+          userId: 1,
         },
         select: {
           firstName: true,
@@ -64,7 +64,7 @@ export default class ProfileController {
 
       const users = await prisma.users.update({
         where: {
-          userId: Number(userId),
+          userId: 1,
         },
         data: {
           year: Number(year),
