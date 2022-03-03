@@ -35,30 +35,28 @@ export default class RanksController {
 
   public patchRanks = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { rankId, userId, factorId, score } = req.body;
-      const maxScore = await prisma.factors.findMany({
-        where: { factorId },
-        select: {
-          maxScore: true,
-        },
+      const { crewScore } = req.body;
+
+      let crewScoreList: any = [];
+
+      type User = {
+        userId: number;
+        factorId: number;
+        score: number;
+      };
+
+      await prisma.$transaction(
+        (crewScoreList = crewScore.map((user: User) =>
+          prisma.ranking.updateMany({
+            where: { factorId: user.factorId, userId: user.userId },
+            data: { score: user.score },
+          })
+        ))
+      );
+
+      return res.status(200).json({
+        success: true,
       });
-      if (score <= maxScore[0].maxScore) {
-        const patchRanks = await prisma.ranking.updateMany({
-          where: { rankId, userId, factorId },
-          data: {
-            score,
-          },
-        });
-        return res.status(200).json({
-          success: true,
-          patchRanks,
-        });
-      } else {
-        return res.status(200).json({
-          success: false,
-          message: "Score is greater than max score",
-        });
-      }
     } catch (e) {
       console.error(e);
       res.status(500).send({
