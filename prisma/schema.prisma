@@ -57,7 +57,7 @@ model events {
   eventId             Int                   @id(map: "public.events_pkey") @default(dbgenerated("nextval('\"public.events_eventId_seq\"'::regclass)"))
   eventName           String                @db.VarChar(50)
   eventType           String                @db.VarChar(50)
-  eventDate           DateTime              @db.Timestamptz(6)
+  eventDate           DateTime              @db.Date
   phase               Int
   conductedBy         String?               @db.VarChar(20)
   speaker             String?               @db.VarChar(30)

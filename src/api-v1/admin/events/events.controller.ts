@@ -32,13 +32,7 @@ export default class EventsController {
           "-" +
           (date.getMonth() + 1) +
           "-" +
-          date.getDate() +
-          " " +
-          date.getHours() +
-          ":" +
-          date.getMinutes() +
-          ":" +
-          date.getSeconds();
+          date.getDate();
         const phase = event.phase;
         return {
           eventId: event.eventId,
@@ -109,12 +103,7 @@ export default class EventsController {
         (date.getMonth() + 1) +
         "-" +
         date.getDate() +
-        " " +
-        date.getHours() +
-        ":" +
-        date.getMinutes() +
-        ":" +
-        date.getSeconds();
+        " ";
 
       const data = {
         eventId: _events.eventId,
@@ -177,6 +166,7 @@ export default class EventsController {
         speaker,
         phase,
       } = req.body;
+      console.log("patch event", eventDate.setSeconds(0));
       const _events = await prisma.events.update({
         where: { eventId },
         data: {
@@ -197,12 +187,7 @@ export default class EventsController {
         (date.getMonth() + 1) +
         "-" +
         date.getDate() +
-        " " +
-        date.getHours() +
-        ":" +
-        date.getMinutes() +
-        ":" +
-        date.getSeconds();
+        " ";
 
       const data = {
         eventId: _events.eventId,
