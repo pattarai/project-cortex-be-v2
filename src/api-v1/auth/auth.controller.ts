@@ -62,6 +62,7 @@ export default class AuthController {
     public checkUser = async (req: Request, res: Response): Promise<any> => {
         try {
             let userId = res.locals.user.userId
+            let roleId = res.locals.user.roleId
             let isCompleted = await prisma.users.findFirst({
                 where: {
                     userId
@@ -70,9 +71,15 @@ export default class AuthController {
                     isCompleted: true
                 }
             })
+            let isAdmin = await prisma.office_bearers.findFirst({
+                where: {
+                    roleId
+                }
+            })
             res.json({
                 success: true,
                 isCompleted: isCompleted.isCompleted,
+                isAdmin: isAdmin ? true : false,
                 user: res.locals.user
             })
         }
