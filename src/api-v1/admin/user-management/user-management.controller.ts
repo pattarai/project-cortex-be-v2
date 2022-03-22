@@ -87,6 +87,18 @@ export default class UsermanagementController {
           ...userDetails,
         },
       });
+      const factorIds = await prisma.factors.findMany({
+        select: {
+          factorId: true,
+        },
+      });
+      await prisma.$transaction(
+        factorIds.map((factor) =>
+          prisma.ranking.create({
+            data: { userId: user.userId, factorId: factor.factorId, score: 0 },
+          })
+        )
+      );
       sendPassword(email, password);
       return res.status(200).json({
         success: true,
