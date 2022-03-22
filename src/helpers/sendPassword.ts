@@ -866,18 +866,11 @@ let template = (password) => {
                                                         "
                                                       >
                                                         <b
-                                                          >Picture it, Design it,
-                                                          Develop it</b
+                                                          ></b
                                                         ><br />
-                                                        If you’re someone who keeps
-                                                        inventing new ideas along the
-                                                        way, with no proper platform to
-                                                        work on it, then you’ve reached
-                                                        the right place. “Pattarai” is a
-                                                        community of industrious
-                                                        engineers working to transform
-                                                        your ideas into functioning
-                                                        projects!<br />
+                                                        Cortex features an intuitive design and incorporates modules like attendance, 
+                                                        events, ranking that help the club become more organized as well as start a healthy 
+                                                        competition in showcasing the members' performance.  You are free to contribute to our project.!<br />
                                                       </p>
                                                     </td>
                                                   </tr>
