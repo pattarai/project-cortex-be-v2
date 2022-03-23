@@ -1,16 +1,22 @@
-FROM node:16.14.0-alpine
-
-RUN apk add --no-cache --virtual .gyp \
-    python3 \
-    make \
-    g++ \
-    bash
-
+# stage 1 building the code
+FROM node as builder
 WORKDIR /usr/app
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 COPY . .
 RUN npm run build
 
-EXPOSE 3000
-CMD ["npx prisma db push && node dist/index.js"]
+# stage 2
+FROM node
+WORKDIR /usr/app
+COPY package*.json ./
+RUN npm install
+
+COPY --from=builder /usr/app/dist ./dist
+COPY prisma ./prisma
+
+COPY .env .
+
+EXPOSE 5000
+RUN npx prisma generate
+CMD node dist/index.js
