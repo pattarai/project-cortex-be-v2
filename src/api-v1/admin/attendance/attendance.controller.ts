@@ -1,14 +1,12 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../helpers/prismaClient";
 
 export default class AttendanceController {
   // Get all Attendance
   public getAttendance = async (req: Request, res: Response): Promise<any> => {
     try {
       const { eventName, eventType, eventDate } = req.body;
-      const date=new Date(eventDate);
+      const date = new Date(eventDate);
       const newDate = date.setDate(date.getDate() + 1);
       const eventId = await prisma.events.findFirst({
         where: {

@@ -1,10 +1,10 @@
 //import * as bcrypt from 'bcrypt';
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../helpers/prismaClient";
+
 import { UploadedFile } from "express-fileupload";
 import * as path from "path";
 
-const prisma = new PrismaClient();
 
 export default class CompleteProfile {
   public completeProfileGet = async (

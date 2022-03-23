@@ -1,8 +1,7 @@
 //import * as bcrypt from 'bcrypt';
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../helpers/prismaClient";
 
-const prisma = new PrismaClient();
 
 export default class CommonViewController {
   public getUsers = async (req: Request, res: Response): Promise<any> => {

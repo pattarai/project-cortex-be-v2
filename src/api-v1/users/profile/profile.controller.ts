@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { PrismaClient, Prisma } from "@prisma/client";
+import prisma from "../../../helpers/prismaClient";
 
-const prisma = new PrismaClient();
 
 export default class ProfileController {
   public getProfile = async (req: Request, res: Response): Promise<any> => {
