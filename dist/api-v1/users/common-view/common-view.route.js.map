@@ -1,0 +1,1 @@
+{"version":3,"file":"common-view.route.js","sourceRoot":"","sources":["../../../../src/api-v1/users/common-view/common-view.route.ts"],"names":[],"mappings":";;AAAA,qCAAiC;AACjC,qEAA4D;AAE5D,MAAM,UAAU,GAAW,IAAA,gBAAM,GAAE,CAAC;AACpC,MAAM,oBAAoB,GAAG,IAAI,gCAAoB,EAAE,CAAC;AAExD,UAAU;KACL,KAAK,CAAC,GAAG,CAAC;KACV,GAAG,CAAC,oBAAoB,CAAC,QAAQ,CAAC,CAAC;AAExC,kBAAe,UAAU,CAAC"}
