@@ -10,17 +10,12 @@ import server from "./api";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const httpServer = https.createServer({
-  key: fs.readFileSync(path.join(__dirname, "..", "selfsigned.key")),
-  cert: fs.readFileSync(path.join(__dirname, "..", "selfsigned.crt"))
-}, server);
-
-httpServer.listen(process.env.API_PORT || "5000", () => {
+server.listen(process.env.API_PORT || "5000", () => {
   console.log(
     `The API server has successfully started. \nListening at ${process.env.APP_BASE_URL || "http://localhost:5000"
     }`
   );
-});
+})
 
 process.on("SIGINT", function () {
   prisma.$disconnect(); // Disconnect from Prisma
