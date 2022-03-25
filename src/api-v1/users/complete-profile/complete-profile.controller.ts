@@ -2,8 +2,8 @@
 import { Request, Response } from "express";
 import prisma from "../../../helpers/prismaClient";
 
-import { UploadedFile } from "express-fileupload";
-import * as path from "path";
+// import { UploadedFile } from "express-fileupload";
+// import * as path from "path";
 
 
 export default class CompleteProfile {
@@ -71,16 +71,16 @@ export default class CompleteProfile {
 
       let userId = res.locals.user.userId;
 
-      let profilePicFile = req.files.profilePic as UploadedFile;
-      let bitmojiFile = req.files.bitmojiPic as UploadedFile;
+      // let profilePicFile = req.files.profilePic as UploadedFile;
+      // let bitmojiFile = req.files.bitmojiPic as UploadedFile;
 
-      if (profilePicFile && bitmojiFile) {
-        let profilePath = path.join("public", "profile", `${userId}.jpg`);
-        let bitmojiPath = path.join("public", "bitmoji", `${userId}.jpg`);
+      // if (profilePicFile && bitmojiFile) {
+      //   let profilePath = path.join("public", "profile", `${userId}.jpg`);
+      //   let bitmojiPath = path.join("public", "bitmoji", `${userId}.jpg`);
 
-        profilePicFile.mv(profilePath);
-        bitmojiFile.mv(bitmojiPath);
-      }
+      //   profilePicFile.mv(profilePath);
+      //   bitmojiFile.mv(bitmojiPath);
+      // }
 
       const user = await prisma.users.update({
         where: {
