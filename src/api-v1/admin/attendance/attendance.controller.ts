@@ -9,7 +9,7 @@ export default class AttendanceController {
     try {
       const { eventName, eventType, eventDate } = req.body;
       const date=new Date(eventDate);
-      const newDate = date.setDate(date.getDate() + 1);
+      const newDate = date.setDate(date.getDate() - 1);
       const eventId = await prisma.events.findFirst({
         where: {
           eventName,
