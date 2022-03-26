@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../helpers/prismaClient";
 import { hash } from "bcryptjs";
 import { sendPassword } from "../../../helpers/sendPassword";
-
-const prisma = new PrismaClient();
+ 
 
 export default class UsermanagementController {
   public getUser = async (req: Request, res: Response): Promise<any> => {

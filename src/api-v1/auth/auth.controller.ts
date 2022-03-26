@@ -1,10 +1,8 @@
 //import * as bcrypt from 'bcrypt';
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import { hash, compare } from "bcryptjs"
 import { sign } from "jsonwebtoken"
-
-const prisma = new PrismaClient();
+import prisma from "../../helpers/prismaClient";
 
 export default class AuthController {
 

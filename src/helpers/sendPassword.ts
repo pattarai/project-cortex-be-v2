@@ -2,8 +2,8 @@ import * as nodemailer from "nodemailer"
 require('dotenv').config();
 
 let template = (password) => {
-    return (
-        `
+  return (
+    `
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html
           xmlns="http://www.w3.org/1999/xhtml"
@@ -1576,31 +1576,31 @@ let template = (password) => {
           </body>
         </html>
         `
-    )
+  )
 }
 
 export const sendPassword = (receiver: string, password: string): void => {
-    var transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: "infantvalan02@gmail.com",
-            pass: "nfnviufphnoqzgho",
-        },
-    });
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.SMTP_EMAIL,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
 
-    var mailOptions = {
-        from: "Project Cortex",
-        to: receiver,
-        subject: "Cortex Account Password",
-        html: template(password)
-    };
+  var mailOptions = {
+    from: "Project Cortex",
+    to: receiver,
+    subject: "Cortex Account Password",
+    html: template(password)
+  };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log("Email sent: " + info.response);
-        }
-    });
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
 
 }

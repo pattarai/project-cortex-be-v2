@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../helpers/prismaClient";
 
-const prisma = new PrismaClient();
 export default class RankController {
   public getAllRanks = async (req: Request, res: Response): Promise<any> => {
     try {

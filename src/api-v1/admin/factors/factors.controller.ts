@@ -1,8 +1,6 @@
 //import * as bcrypt from 'bcrypt';
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../helpers/prismaClient";
 
 export default class FactorsController {
   public getFactors = async (req: Request, res: Response): Promise<any> => {
