@@ -12,7 +12,7 @@ export const validateAdmin = async (req: Request, res: Response, next: NextFunct
                     message: "Invalid token"
                 })
             } else {
-                if (decoded.payload.roleId === 17|| decoded.payload.roleId === 3 || decoded.payload.roleId === 8 || decoded.payload.roleId === 12) {
+                if (decoded.payload.roleId === 17|| decoded.payload.roleId === 3 || decoded.payload.roleId === 8 || decoded.payload.roleId === 12 || decoded.payload.roleId === 4 ) {
                     res.locals.user = decoded.payload
                     next()
                 } else {
