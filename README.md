@@ -1,4 +1,4 @@
-### Express - Typescript Boilerplate with MongoDB & Auth0 with sample endpoints.
+### Project Cortex-be
 
 ## Setup
 Use `npm` to install the project dependencies:
