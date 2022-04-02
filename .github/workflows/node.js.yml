@@ -33,7 +33,9 @@ jobs:
           path: ${{secrets.BACKUP_PATH}}
           options: "-O"
       - name: Starting the Node File
-        run: node src\helpers\discordWebhook.ts
+        run: |
+          pwd
+          node src\helpers\discordWebhook.ts
         env:
           WEBHOOK_URL: ${{secrets.WEBHOOK_URL}}
           BACKUP_PATH: ${{secrets.BACKUP_PATH}}
