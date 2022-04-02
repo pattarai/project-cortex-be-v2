@@ -1,4 +1,4 @@
-import { Webhook } from "discord-webhook-node"
+const { Webhook } = require("discord-webhook-node")
 
 const sendToDiscord = async () => {
     let WEBHOOK_URL = process.env.WEBHOOK_URL;
