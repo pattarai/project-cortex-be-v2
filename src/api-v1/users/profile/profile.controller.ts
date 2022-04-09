@@ -63,7 +63,7 @@ export default class ProfileController {
           instagramUrl: users.instagramUrl,
           githubUrl: users.githubUrl,
           linkedInUrl: users.linkedInUrl,
-          description: users.department,
+          description: users.description,
         },
       });
     } catch (e) {
