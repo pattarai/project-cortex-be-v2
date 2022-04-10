@@ -1,7 +1,7 @@
 //import * as bcrypt from 'bcrypt';
 import { Request, Response } from "express";
 import { hash, compare } from "bcryptjs"
-import { sign } from "jsonwebtoken"
+import { sign, verify } from "jsonwebtoken"
 import prisma from "../../helpers/prismaClient";
 
 export default class AuthController {
@@ -82,6 +82,82 @@ export default class AuthController {
             })
         }
         catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.toString(),
+            });
+        }
+    }
+
+    public forgotPassword = async (req: Request, res: Response): Promise<any> => {
+        try {
+            let { email } = req.body
+            if (email) {
+                let user = await prisma.users.findFirst({
+                    where: {
+                        email
+                    }
+                })
+                if (user) {
+                    let token = await sign({ userId: user.userId }, process.env.JWT_AUTH_SECRET, { expiresIn: "5m" })
+                    res.json({
+                        success: true,
+                        token
+                    })
+                } else {
+                    res.json({
+                        success: false,
+                        message: "User not found"
+                    })
+                }
+            } else {
+                res.json({
+                    success: false,
+                    message: "Please provide all the required fields"
+                })
+            }
+        } catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.toString(),
+            });
+        }
+    }
+
+    public updatePassword = async (req: Request, res: Response): Promise<any> => {
+        try {
+            let { password, token } = req.body
+            if (password && token) {
+                let user = await verify(token, process.env.JWT_AUTH_SECRET)
+                try {
+                    if (user) {
+                        let hashedPassword = await hash(password, 10)
+                        await prisma.users.update({
+                            where: {
+                                userId: user.userId
+                            },
+                            data: {
+                                password: hashedPassword
+                            }
+                        })
+                        res.json({
+                            success: true,
+                            message: "Password updated successfully"
+                        })
+                    }
+                } catch {
+                    res.json({
+                        success: false,
+                        message: "Invalid token"
+                    })
+                }
+            } else {
+                res.json({
+                    success: false,
+                    message: "Please provide all the required fields"
+                })
+            }
+        } catch (err) {
             return res.status(500).json({
                 success: false,
                 message: err.toString(),
