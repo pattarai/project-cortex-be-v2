@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { hash, compare } from "bcryptjs"
 import { sign, verify } from "jsonwebtoken"
 import prisma from "../../helpers/prismaClient";
+import { sendMagicLink } from "../../helpers/sendPassword";
 
 export default class AuthController {
 
@@ -99,10 +100,12 @@ export default class AuthController {
                     }
                 })
                 if (user) {
-                    let token = await sign({ userId: user.userId }, process.env.JWT_AUTH_SECRET, { expiresIn: "5m" })
+                    let token = await sign({ userId: user.userId }, process.env.JWT_AUTH_SECRET, { expiresIn: "1m" })
+                    let link = ` ${process.env.FE_URL}/forgot-password?token=${token}`
+                    await sendMagicLink(user.email, link)
                     res.json({
                         success: true,
-                        token
+                        message: "An email has bee sent to you."
                     })
                 } else {
                     res.json({
@@ -158,6 +161,7 @@ export default class AuthController {
                 })
             }
         } catch (err) {
+            // console.log(err.toString())
             return res.status(500).json({
                 success: false,
                 message: err.toString(),

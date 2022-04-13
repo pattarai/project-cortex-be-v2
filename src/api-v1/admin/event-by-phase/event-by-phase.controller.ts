@@ -47,7 +47,7 @@ export default class EventsController {
           phase: phase,
         };
       });
-      console.log(data);
+      // console.log(data);
       return res.status(200).json({
         message: "Success",
         data,

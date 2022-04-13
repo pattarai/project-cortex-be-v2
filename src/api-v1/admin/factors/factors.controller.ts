@@ -45,7 +45,7 @@ export default class FactorsController {
           maxScore,
         },
       });
-      console.log(postFactors);
+      // console.log(postFactors);
       const getUsers = await prisma.users.findMany({
         select: {
           userId: true,
