@@ -100,7 +100,7 @@ export default class AuthController {
                     }
                 })
                 if (user) {
-                    let token = await sign({ userId: user.userId }, process.env.JWT_AUTH_SECRET, { expiresIn: "1m" })
+                    let token = await sign({ userId: user.userId }, process.env.JWT_AUTH_SECRET, { expiresIn: "15m" })
                     let link = ` ${process.env.FE_URL}/forgot-password?token=${token}`
                     await sendMagicLink(user.email, link)
                     res.json({
